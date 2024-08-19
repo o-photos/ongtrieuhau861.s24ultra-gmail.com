@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   # Chạy tự động mỗi 30 phút
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/5 * * * *"
 jobs:
   o3copyNOW:
     runs-on: ubuntu-latest
