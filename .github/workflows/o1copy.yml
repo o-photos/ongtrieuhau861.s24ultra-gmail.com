@@ -1,4 +1,4 @@
-name: o0info
+name: o1info
 on:
   workflow_dispatch:
     inputs:
@@ -22,7 +22,7 @@ on:
         options:
           - "googlephoto-ohau26.1031@gmail.com.conf"
 jobs:
-  o0info:
+  o1info:
     runs-on: ubuntu-latest
     steps:
       # Set the organization/repository name to an environment variable
