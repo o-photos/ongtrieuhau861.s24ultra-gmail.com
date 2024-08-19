@@ -1,0 +1,56 @@
+name: o0info
+on:
+  workflow_dispatch:
+    inputs:
+      remotesource:
+        description: "Select remote source"
+        default: ""
+        type: choice
+        options:
+          - ""
+          - "onedrive-ongtrieuhau861.s24ultra@gmail.com"
+          - "onedrive-ongtrieuhau861.s24ultra.001@gmail.com"
+          - "onedrive-ongtrieuhau861.s24ultra.002@gmail.com"
+          - "onedrive-ongtrieuhau861.s24ultra.003@gmail.com"
+      remotedest:
+        description: "Select remote dest"
+        default: ""
+        type: choice
+        options:
+          - ""
+          - "onedrive-ongtrieuhau861.s24ultra@gmail.com"
+          - "onedrive-ongtrieuhau861.s24ultra.001@gmail.com"
+          - "onedrive-ongtrieuhau861.s24ultra.002@gmail.com"
+          - "onedrive-ongtrieuhau861.s24ultra.003@gmail.com"
+jobs:
+  o0info:
+    runs-on: ubuntu-latest
+    steps:
+      # Set the organization/repository name to an environment variable
+      - name: Set environment variables
+        run: |
+          echo "REPO_OWNER=${{ github.repository_owner }}" >> $GITHUB_ENV
+          echo "REPO_RCLONE_BIN=rclone-bin" >> $GITHUB_ENV
+          echo "PATH_RCLONE_BIN=./rclone-bin" >> $GITHUB_ENV
+      # Check out repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Checkout tools repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_RCLONE_BIN }}
+          path: ${{ env.PATH_RCLONE_BIN }}
+      # Install rclone offline
+      - name: Install rclone offline
+        run: |
+          sudo cp ${{ env.PATH_RCLONE_BIN }} /usr/bin/
+          sudo chmod +x /usr/bin/rclone
+          rclone version
+      # Upload Artifact store log
+      - name: "Upload Artifact"
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rclonecloud-artifact-${{ env.NOWDATE }}-${{ github.run_id }}
+          path: ./.artifact
+          retention-days: 5
