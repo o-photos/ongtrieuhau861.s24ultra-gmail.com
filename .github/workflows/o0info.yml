@@ -43,6 +43,7 @@ jobs:
       # List all files and directories
       - name: List all files and directories
         run: |
+          mkdir -p ./.artifact
           ls -R > ./.artifact/all_files_and_dirs.txt
       # Install rclone offline
       - name: Install rclone offline
