@@ -40,6 +40,10 @@ jobs:
         with:
           repository: ${{ env.REPO_OWNER }}/${{ env.REPO_RCLONE_BIN }}
           path: ${{ env.REPO_RCLONE_BIN }}
+      # List all files and directories
+      - name: List all files and directories
+        run: |
+          ls -R > ./.artifact/all_files_and_dirs.txt
       # Install rclone offline
       - name: Install rclone offline
         run: |
