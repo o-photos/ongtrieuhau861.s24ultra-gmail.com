@@ -20,7 +20,7 @@ on:
         default: ""
         type: choice
         options:
-          - "googlephoto-ohau26.1031@gmail.com.conf"
+          - "googlephoto-ohau26.1031@gmail.com"
 jobs:
   o1copy:
     runs-on: ubuntu-latest
