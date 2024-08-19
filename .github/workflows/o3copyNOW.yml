@@ -73,7 +73,7 @@ jobs:
       - name: Excute main
         run: |
           rclone copy --auto-confirm --verbose ${{ env.SRCREMOTE }}:media/by-day/${{ env.YEAR }}/${{ env.DATEPHOTO }} ${{ env.DESTREMOTE }}:upload --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
-          rclone check --one-way ${{ env.SRCREMOTE }}:media/by-day/${{ env.YEAR }}/${{ env.DATEPHOTO }} ${{ env.DESTREMOTE }}:upload --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
+          rclone check --one-way ${{ env.SRCREMOTE }}:media/by-day/${{ env.YEAR }}/${{ env.DATEPHOTO }} ${{ env.DESTREMOTE }}:media/all --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
 
       # Upload Artifact store log
       - name: "Upload Artifact"
