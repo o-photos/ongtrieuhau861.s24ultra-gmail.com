@@ -1,5 +1,6 @@
 name: o3copyNOW
 on:
+  workflow_dispatch:
   # Chạy tự động mỗi 30 phút
   schedule:
     - cron: "*/30 * * * *"
@@ -16,6 +17,8 @@ jobs:
           echo "REPO_RCLONE_CONFIGS=rclone-configs" >> $GITHUB_ENV
           TZ='Asia/Bangkok' date +'%Y%m%d-%H%M' > date.txt
           echo "NOWDATE=$(cat date.txt)" >> $GITHUB_ENV
+          echo "YEAR=$(date +'%Y')" >> $GITHUB_ENV
+          echo "DATEPHOTO=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
       # Check out repo (public)
       - name: Checkout repository
@@ -67,7 +70,7 @@ jobs:
       # Excute main
       - name: Excute main
         run: |
-          rclone copy --auto-confirm --verbose googlephoto-ongtrieuhau861.s24ultra@gmail.com:media/by-day/2024/2024-08-19 googlephoto-ohau26.1031@gmail.com:upload --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
+          rclone copy --auto-confirm --verbose googlephoto-ongtrieuhau861.s24ultra@gmail.com:media/by-day/${{ env.YEAR }}/${{ env.DATEPHOTO }} googlephoto-ohau26.1031@gmail.com:upload --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
 
       # Upload Artifact store log
       - name: "Upload Artifact"
