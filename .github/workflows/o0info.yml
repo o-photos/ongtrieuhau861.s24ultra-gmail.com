@@ -68,7 +68,7 @@ jobs:
       # Excute main
       - name: Excute main
         run: |
-          rclone about googlephoto-ongtrieuhau861.s24ultra@gmail.com: --config ./${{ env.REPO_RCLONE_CONFIGS }}/googlephoto-ongtrieuhau861.s24ultra@gmail.com.conf
+          rclone lsjson googlephoto-ongtrieuhau861.s24ultra@gmail.com:media/by-month/2024/2024-07 --config ./${{ env.REPO_RCLONE_CONFIGS }}/googlephoto-ongtrieuhau861.s24ultra@gmail.com.conf
 
       # Upload Artifact store log
       - name: "Upload Artifact"
