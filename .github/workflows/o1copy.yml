@@ -48,14 +48,6 @@ jobs:
           token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
           path: ${{ env.REPO_RCLONE_CONFIGS }}
 
-      # # Append all rclone config files
-      # - name: Append all rclone config files
-      #   run: |
-      #     # Change to the directory containing rclone config files
-      #     cd ${{ env.REPO_RCLONE_CONFIGS }}
-
-      #     # Find all config files and append them into one file
-      #     find . -type f -name "*.conf" -exec cat {} \; > ./rclone.conf
       # Append all rclone config files
       - name: Append all rclone config files
         run: |
