@@ -9,8 +9,6 @@ on:
         options:
           - "media/by-month/2024/2024-07"
           - "media/by-month/2024/2024-08"
-          
-    inputs:
       remotedest:
         description: "REMOTE"
         default: ""
