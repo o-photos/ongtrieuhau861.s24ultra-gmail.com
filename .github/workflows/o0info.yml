@@ -31,9 +31,9 @@ jobs:
         run: |
           echo "REPO_OWNER=${{ github.repository_owner }}" >> $GITHUB_ENV
           echo "REPO_RCLONE_BIN=rclone-bin" >> $GITHUB_ENV
-          echo "PATH_RCLONE_BIN=./rclone-bin" >> $GITHUB_ENV
+          echo "REPO_RCLONE_CONFIGS=rclone-configs" >> $GITHUB_ENV
 
-      # Check out repo
+      # Check out repo (public)
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Checkout tools repo
@@ -41,21 +41,34 @@ jobs:
         with:
           repository: ${{ env.REPO_OWNER }}/${{ env.REPO_RCLONE_BIN }}
           path: ${{ env.REPO_RCLONE_BIN }}
+      # Check out repo (private)
+      - name: Checkout private tools
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_RCLONE_CONFIGS }}
+          token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
+          path: ${{ env.REPO_RCLONE_CONFIGS }}
 
       # List all files and directories
       - name: List all files and directories
         run: |
           mkdir -p ./.artifact
           ls -R > ./.artifact/all_files_and_dirs.txt
+          ls -R
 
       # Install rclone offline
       - name: Install rclone offline
         run: |
-          sudo cp ${{ env.PATH_RCLONE_BIN }}/rclone /usr/bin/
-          sudo cp ${{ env.PATH_RCLONE_BIN }}/rclone.1 /usr/bin/
+          sudo cp ./${{ env.REPO_RCLONE_BIN }}/rclone /usr/bin/
+          sudo cp ./${{ env.REPO_RCLONE_BIN }}/rclone.1 /usr/bin/
           sudo chmod +x /usr/bin/rclone
           sudo chmod +x /usr/bin/rclone.1
           rclone version
+
+      # Excute main
+      - name: Excute main
+        run: |
+          rclone about googlephoto-ongtrieuhau861.s24ultra@gmail.com: --config ./${{ env.REPO_RCLONE_CONFIGS }}/googlephoto-ongtrieuhau861.s24ultra@gmail.com.conf
 
       # Upload Artifact store log
       - name: "Upload Artifact"
