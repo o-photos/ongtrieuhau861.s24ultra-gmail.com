@@ -1,4 +1,4 @@
-name: o1info
+name: o1copy
 on:
   workflow_dispatch:
     inputs:
@@ -22,7 +22,7 @@ on:
         options:
           - "googlephoto-ohau26.1031@gmail.com.conf"
 jobs:
-  o1info:
+  o1copy:
     runs-on: ubuntu-latest
     steps:
       # Set the organization/repository name to an environment variable
@@ -48,14 +48,28 @@ jobs:
           token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
           path: ${{ env.REPO_RCLONE_CONFIGS }}
 
+      # # Append all rclone config files
+      # - name: Append all rclone config files
+      #   run: |
+      #     # Change to the directory containing rclone config files
+      #     cd ${{ env.REPO_RCLONE_CONFIGS }}
+
+      #     # Find all config files and append them into one file
+      #     find . -type f -name "*.conf" -exec cat {} \; > ./rclone.conf
       # Append all rclone config files
       - name: Append all rclone config files
         run: |
+          # Create output file if it doesn't exist
+          touch ./rclone.conf
+
           # Change to the directory containing rclone config files
           cd ${{ env.REPO_RCLONE_CONFIGS }}
 
-          # Find all config files and append them into one file
-          find . -type f -name "*.conf" -exec cat {} \; > ./rclone.conf
+          # Find all config files and append them into one file with a newline between files
+          find . -type f -name "*.conf" -print0 | while IFS= read -r -d '' file; do
+            cat "$file" >> ./rclone.conf
+            echo -e "\n" >> ./rclone.conf
+          done
 
       # List all files and directories
       - name: List all files and directories
