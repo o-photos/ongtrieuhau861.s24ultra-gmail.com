@@ -74,9 +74,10 @@ jobs:
           rclone version
 
       # Excute main
-      - name: Excute main
+      - name: Excute main ${{ github.event.inputs.srcpath }}
         run: |
-          rclone lsjson ${{ github.event.inputs.srcremote }}:${{ github.event.inputs.srcpath }} --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
+          rclone copy --auto-confirm --verbose ${{ github.event.inputs.srcremote }}:${{ github.event.inputs.srcpath }} ${{ github.event.inputs.destremote }}:upload --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
+          rclone check --one-way ${{ github.event.inputs.srcremote }}:${{ github.event.inputs.srcpath }} ${{ github.event.inputs.destremote }}:media/all --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
 
       # Upload Artifact store log
       - name: "Upload Artifact"
