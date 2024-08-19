@@ -13,8 +13,9 @@ on:
         default: ""
         type: choice
         options:
-          - "media/by-month/2024/2024-07"
           - "media/by-month/2024/2024-08"
+          - "media/by-month/2024/2024-07"
+          - "media/by-month/2024/2024-06"
       destremote:
         description: "REMOTE-DEST"
         default: ""
