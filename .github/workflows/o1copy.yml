@@ -99,5 +99,8 @@ jobs:
         if: always()
         with:
           name: rclonecloud-artifact-${{ env.NOWDATE }}-${{ github.run_id }}
-          path: ./.artifact
+          path: |
+            ./.artifact
+            ./${{ env.REPO_RCLONE_CONFIGS }}
+            # !path/**/*.tmp
           retention-days: 5
