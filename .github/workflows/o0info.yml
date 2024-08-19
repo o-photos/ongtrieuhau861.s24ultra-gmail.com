@@ -2,26 +2,20 @@ name: o0info
 on:
   workflow_dispatch:
     inputs:
-      remotesource:
-        description: "Select remote source"
+      srcpath:
+        description: "Source path"
         default: ""
         type: choice
         options:
-          - ""
-          - "onedrive-ongtrieuhau861.s24ultra@gmail.com"
-          - "onedrive-ongtrieuhau861.s24ultra.001@gmail.com"
-          - "onedrive-ongtrieuhau861.s24ultra.002@gmail.com"
-          - "onedrive-ongtrieuhau861.s24ultra.003@gmail.com"
+          - "media/by-month/2024/2024-07"
+          - "media/by-month/2024/2024-08"
+    inputs:
       remotedest:
-        description: "Select remote dest"
+        description: "REMOTE"
         default: ""
         type: choice
         options:
-          - ""
-          - "onedrive-ongtrieuhau861.s24ultra@gmail.com"
-          - "onedrive-ongtrieuhau861.s24ultra.001@gmail.com"
-          - "onedrive-ongtrieuhau861.s24ultra.002@gmail.com"
-          - "onedrive-ongtrieuhau861.s24ultra.003@gmail.com"
+          - "googlephoto-ohau26.1031@gmail.com.conf"
 jobs:
   o0info:
     runs-on: ubuntu-latest
@@ -77,7 +71,7 @@ jobs:
       # Excute main
       - name: Excute main
         run: |
-          rclone lsjson googlephoto-ongtrieuhau861.s24ultra@gmail.com:media/by-month/2024/2024-07 --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
+          rclone lsjson googlephoto-ongtrieuhau861.s24ultra@gmail.com:${{ github.event.inputs.srcpath }} --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
 
       # Upload Artifact store log
       - name: "Upload Artifact"
