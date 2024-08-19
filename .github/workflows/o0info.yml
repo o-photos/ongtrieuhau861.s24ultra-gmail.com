@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ env.REPO_OWNER }}/${{ env.REPO_RCLONE_BIN }}
-          path: ${{ env.PATH_RCLONE_BIN }}
+          path: ${{ env.REPO_RCLONE_BIN }}
       # Install rclone offline
       - name: Install rclone offline
         run: |
