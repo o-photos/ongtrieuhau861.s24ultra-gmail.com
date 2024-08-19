@@ -43,7 +43,7 @@ jobs:
       # Install rclone offline
       - name: Install rclone offline
         run: |
-          sudo cp ${{ env.PATH_RCLONE_BIN }} /usr/bin/
+          sudo cp -r ${{ env.PATH_RCLONE_BIN }} /usr/bin/
           sudo chmod +x /usr/bin/rclone
           rclone version
       # Upload Artifact store log
