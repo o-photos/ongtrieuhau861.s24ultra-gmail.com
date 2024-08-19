@@ -2,6 +2,12 @@ name: o0info
 on:
   workflow_dispatch:
     inputs:
+      srcremote:
+        description: "Remote source name"
+        default: ""
+        type: choice
+        options:
+          - "googlephoto-ongtrieuhau861.s24ultra@gmail.com"
       srcpath:
         description: "Source path"
         default: ""
@@ -70,7 +76,7 @@ jobs:
       # Excute main
       - name: Excute main
         run: |
-          rclone lsjson googlephoto-ongtrieuhau861.s24ultra@gmail.com:${{ github.event.inputs.srcpath }} --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
+          rclone lsjson ${{ github.event.inputs.srcremote }}:${{ github.event.inputs.srcpath }} --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
 
       # Upload Artifact store log
       - name: "Upload Artifact"
