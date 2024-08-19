@@ -19,6 +19,8 @@ jobs:
           echo "NOWDATE=$(cat date.txt)" >> $GITHUB_ENV
           echo "YEAR=$(date +'%Y')" >> $GITHUB_ENV
           echo "DATEPHOTO=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+          echo "SRCREMOTE=googlephoto-ongtrieuhau861.s24ultra@gmail.com" >> $GITHUB_ENV
+          echo "DESTREMOTE=googlephoto-ohau26.1031@gmail.com" >> $GITHUB_ENV
 
       # Check out repo (public)
       - name: Checkout repository
@@ -70,7 +72,8 @@ jobs:
       # Excute main
       - name: Excute main
         run: |
-          rclone copy --auto-confirm --verbose googlephoto-ongtrieuhau861.s24ultra@gmail.com:media/by-day/${{ env.YEAR }}/${{ env.DATEPHOTO }} googlephoto-ohau26.1031@gmail.com:upload --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
+          rclone copy --auto-confirm --verbose ${{ env.SRCREMOTE }}:media/by-day/${{ env.YEAR }}/${{ env.DATEPHOTO }} ${{ env.DESTREMOTE }}:upload --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
+          rclone check --one-way ${{ env.SRCREMOTE }}:media/by-day/${{ env.YEAR }}/${{ env.DATEPHOTO }} ${{ env.DESTREMOTE }}:upload --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
 
       # Upload Artifact store log
       - name: "Upload Artifact"
