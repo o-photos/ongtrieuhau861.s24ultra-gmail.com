@@ -1,11 +1,11 @@
-name: o3copyNOW
+name: o3copyDaily
 on:
   workflow_dispatch:
   # Chạy tự động mỗi 30 phút
   schedule:
     - cron: "*/5 * * * *"
 jobs:
-  o3copyNOW:
+  o3copyDaily:
     runs-on: ubuntu-latest
     steps:
       # Set the organization/repository name to an environment variable
