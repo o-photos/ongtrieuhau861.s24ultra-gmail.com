@@ -69,11 +69,23 @@ jobs:
           sudo chmod +x /usr/bin/rclone.1
           rclone version
 
-      # Excute main
-      - name: Excute main
+      # Excute main by check
+      - name: Excute main by check
+        continue-on-error: true
         run: |
-          rclone copy --auto-confirm --verbose ${{ env.SRCREMOTE }}:media/by-day/${{ env.YEAR }}/${{ env.DATEPHOTO }} ${{ env.DESTREMOTE }}:upload --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
           rclone check --one-way ${{ env.SRCREMOTE }}:media/by-day/${{ env.YEAR }}/${{ env.DATEPHOTO }} ${{ env.DESTREMOTE }}:media/all --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
+
+      # Excute main by copy
+      - name: Excute main by copy
+        continue-on-error: true
+        run: |
+          # Kiểm tra xem file 'missing-on-dst.txt' có nội dung hay không
+          if [ -s ./.artifact/missing-on-dst.txt ]; then
+              echo "Có file bị thiếu, tiến hành copy..."
+              rclone copy --auto-confirm --verbose ${{ env.SRCREMOTE }}:media/by-day/${{ env.YEAR }}/${{ env.DATEPHOTO }} ${{ env.DESTREMOTE }}:upload --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
+          else
+              echo "Không có file bị thiếu, không cần copy."
+          fi
 
       # Upload Artifact store log
       - name: "Upload Artifact"
