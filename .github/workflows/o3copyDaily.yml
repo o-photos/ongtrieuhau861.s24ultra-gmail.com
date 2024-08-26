@@ -73,7 +73,7 @@ jobs:
       - name: Excute main by check
         continue-on-error: true
         run: |
-          rclone check --one-way ${{ env.SRCREMOTE }}:media/by-day/${{ env.YEAR }}/${{ env.DATEPHOTO }} ${{ env.DESTREMOTE }}:media/all --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
+          rclone check --one-way ${{ env.SRCREMOTE }}:media/by-day/${{ env.YEAR }}/${{ env.DATEPHOTO }} ${{ env.DESTREMOTE }}:media/all --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf --missing-on-dst ./.artifact/missing-on-dst.txt
 
       # Excute main by copy
       - name: Excute main by copy
