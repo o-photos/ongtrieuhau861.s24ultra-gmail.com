@@ -1,0 +1,97 @@
+name: o3copyDaily
+on:
+  workflow_dispatch:
+jobs:
+  o3copyDaily:
+    runs-on: ubuntu-latest
+    steps:
+      # Set the organization/repository name to an environment variable
+      - name: Set environment variables
+        run: |
+          echo "REPO_OWNER=${{ github.repository_owner }}" >> $GITHUB_ENV
+          echo "REPO_ME=$(echo ${{ github.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
+          echo "REPO_RCLONE_BIN=rclone-bin" >> $GITHUB_ENV
+          echo "REPO_RCLONE_CONFIGS=rclone-configs" >> $GITHUB_ENV
+          TZ='Asia/Bangkok' date +'%Y%m%d-%H%M' > date.txt
+          echo "NOWDATE=$(cat date.txt)" >> $GITHUB_ENV
+          echo "YEAR=$(date +'%Y')" >> $GITHUB_ENV
+          echo "DATEPHOTO=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+          echo "SRCREMOTE=googlephoto-ongtrieuhau861.s24ultra@gmail.com" >> $GITHUB_ENV
+          echo "DESTREMOTE=googlephoto-ohau26.1031@gmail.com" >> $GITHUB_ENV
+
+      # Check out repo (public)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Checkout tools repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_RCLONE_BIN }}
+          path: ${{ env.REPO_RCLONE_BIN }}
+      # Check out repo (private)
+      - name: Checkout private tools
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_RCLONE_CONFIGS }}
+          token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
+          path: ${{ env.REPO_RCLONE_CONFIGS }}
+
+      # Append all rclone config files
+      - name: Append all rclone config files
+        run: |
+          # Create output file if it doesn't exist
+          touch ./rclone.conf
+
+          # Change to the directory containing rclone config files
+          cd ${{ env.REPO_RCLONE_CONFIGS }}
+
+          # Find all config files and append them into one file with a newline between files
+          find . -type f -name "*.conf" -print0 | while IFS= read -r -d '' file; do
+            cat "$file" >> ./rclone.conf
+            echo -e "\n" >> ./rclone.conf
+          done
+
+      # List all files and directories
+      - name: List all files and directories
+        run: |
+          mkdir -p ./.artifact
+          ls -R > ./.artifact/all_files_and_dirs.txt
+          ls -R
+
+      # Install rclone offline
+      - name: Install rclone offline
+        run: |
+          sudo cp ./${{ env.REPO_RCLONE_BIN }}/rclone /usr/bin/
+          sudo cp ./${{ env.REPO_RCLONE_BIN }}/rclone.1 /usr/bin/
+          sudo chmod +x /usr/bin/rclone
+          sudo chmod +x /usr/bin/rclone.1
+          rclone version
+
+      # Excute main by check
+      - name: Excute main by check
+        continue-on-error: true
+        run: |
+          rclone check --one-way ${{ env.SRCREMOTE }}:media/all ${{ env.DESTREMOTE }}:media/all --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf --missing-on-dst ./.artifact/missing-on-dst.txt
+
+      # Excute main by copy
+      # - name: Excute main by copy
+      #   continue-on-error: true
+      #   run: |
+      #     # Kiểm tra xem file 'missing-on-dst.txt' có nội dung hay không
+      #     if [ -s ./.artifact/missing-on-dst.txt ]; then
+      #         echo "Có file bị thiếu, tiến hành copy..."
+      #         rclone copy --auto-confirm --verbose ${{ env.SRCREMOTE }}:media/by-day/${{ env.YEAR }}/${{ env.DATEPHOTO }} ${{ env.DESTREMOTE }}:upload --config ./${{ env.REPO_RCLONE_CONFIGS }}/rclone.conf
+      #     else
+      #         echo "Không có file bị thiếu, không cần copy."
+      #     fi
+
+      # Upload Artifact store log
+      - name: "Upload Artifact"
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: artifact-${{ env.REPO_OWNER }}-${{ env.REPO_ME }}-${{ env.NOWDATE }}-${{ github.run_id }}
+          path: |
+            ./.artifact
+            !./${{ env.REPO_RCLONE_CONFIGS }}
+            # !path/**/*.tmp
+          retention-days: 5
