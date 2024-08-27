@@ -2,8 +2,8 @@ name: o3copyDaily
 on:
   workflow_dispatch:
   # Chạy tự động mỗi 30 phút
-  schedule:
-    - cron: "*/5 * * * *"
+  # schedule:
+  #   - cron: "*/5 * * * *"
 jobs:
   o3copyDaily:
     runs-on: ubuntu-latest

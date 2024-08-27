@@ -1,8 +1,11 @@
-name: o4all
+name: o3all
 on:
   workflow_dispatch:
+  # Chạy tự động mỗi 30 phút
+  schedule:
+    - cron: "*/5 * * * *"
 jobs:
-  o4all:
+  o3all:
     runs-on: ubuntu-latest
     steps:
       # Set the organization/repository name to an environment variable
